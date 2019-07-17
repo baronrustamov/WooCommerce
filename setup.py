@@ -1,6 +1,6 @@
 import setuptools
 
-from _woocommerce import __author__, __version__, __title__
+from woocommerce import __author__, __version__, __title__
 
 setuptools.setup(
     name=__title__,

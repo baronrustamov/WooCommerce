@@ -87,10 +87,7 @@ class Api(object):
             try:
                 return self.last_response.json()
             except:
-                try:
-                    return self.last_response.text
-                except:
-                    return
+                pass
 
     def get(self, endpoint, get_all=False):
         self._method = 'get'

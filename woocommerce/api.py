@@ -68,7 +68,7 @@ class Api(object):
         self._endpoint = 'products'
         self._method = 'get'
         response = self._request()
-        if response.status_code == 200:
+        if response:
             self.log.debug('authentication successful')
             self.logged_in = True
             return True
@@ -84,29 +84,35 @@ class Api(object):
         if response != self.last_response:
             self.last_response = response
         if self.last_response:
-            return self.last_response
+            try:
+                return self.last_response.json()
+            except:
+                try:
+                    return self.last_response.text()
+                except:
+                    return
 
     def get(self, endpoint, get_all=False):
         self._method = 'get'
         self._endpoint = endpoint
         if not get_all:
-            return self._request().json()
+            return self._request()
         return list(self.get_all(endpoint))
 
     def post(self, endpoint, data):
         self._method = 'post'
         self._endpoint = endpoint
-        return self._request(data=data).json()
+        return self._request(data=data)
 
     def put(self, endpoint, data):
         self._method = 'put'
         self._endpoint = endpoint
-        return self._request(data=data).json()
+        return self._request(data=data)
 
     def delete(self, endpoint):
         self._method = 'delete'
         self._endpoint = endpoint
-        return self._request().json()
+        return self._request()
 
     def __iter__(self):
         return self.get_all(self._endpoint)
@@ -117,7 +123,7 @@ class Api(object):
             self.session.params.update({'page': page, 'per_page': 1})
             self._method = 'get'
             self._endpoint = endpoint
-            response = self._request(data).json()
+            response = self._request(data))
             if not response:
                 break
             try:

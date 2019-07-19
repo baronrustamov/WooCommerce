@@ -73,14 +73,14 @@ class Api(object):
             self.logged_in = True
             return True
 
-    def _request(self, method=None, endpoint=None, data=None):
+    def _request(self, method=None, endpoint=None, params=None, data=None):
         if endpoint:
             self._endpoint = endpoint
         if method:
             self._method = method
         _endpoint = f'{self._api_url}/{self._endpoint}'
         self.log.debug(f'requesting {_endpoint}')
-        response = self.session.request(self._method, _endpoint, json=data)
+        response = self.session.request(self._method, _endpoint, json=data, params=params)
         if response != self.last_response:
             self.last_response = response
         if self.last_response:
@@ -117,10 +117,10 @@ class Api(object):
     def get_all(self, endpoint, data=None):
         page = 1
         while True:
-            self.session.params.update({'page': page, 'per_page': 1})
+            params = {'page': page, 'per_page': 1}
             self._method = 'get'
             self._endpoint = endpoint
-            response = self._request(data)
+            response = self._request(data=data, params=params)
             if not response:
                 break
             try:
@@ -128,8 +128,7 @@ class Api(object):
             except KeyError:
                 yield response
             page += 1
-            del self.session.params['page']
-            del self.session.params['per_page']
+       
 
     def __repr__(self):
         return f'<WooCommerce Api(auth={"YES" if self.logged_in else "NO"}, _endpoint: {self._endpoint}, _method: {self._method.upper()} )>'

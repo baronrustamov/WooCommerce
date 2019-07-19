@@ -123,7 +123,7 @@ class Api(object):
             self.session.params.update({'page': page, 'per_page': 1})
             self._method = 'get'
             self._endpoint = endpoint
-            response = self._request(data))
+            response = self._request(data)
             if not response:
                 break
             try:

@@ -88,7 +88,7 @@ class Api(object):
                 return self.last_response.json()
             except:
                 try:
-                    return self.last_response.text()
+                    return self.last_response.text
                 except:
                     return
 

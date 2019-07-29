@@ -118,9 +118,7 @@ class Api(object):
         page = 1
         while True:
             params = {'page': page, 'per_page': 1}
-            self._method = 'get'
-            self._endpoint = endpoint
-            response = self._request(data=data, params=params)
+            response = self._request(method='get', endpoint=endpoint, params=params,data=data)
             if not response:
                 break
             try:

@@ -1,6 +1,11 @@
 import setuptools
 
-from woocommerce import __author__, __version__, __title__
+
+__title__ = "woocommerce"
+__version__ = "1.0"
+__author__ = "UltrafunkAmsterdam"
+__license__ = "MIT"
+
 
 setuptools.setup(
     name=__title__,

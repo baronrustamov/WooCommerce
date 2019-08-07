@@ -10,7 +10,8 @@ setuptools.setup(
     author=__author__,
     author_email='leon@ultrafunk.nl',
     url='https://github.com/ultrafunkamsterdam/WooCommerce',
-    packages=['woocommerce'],
+    packages=setuptools.find_packages(),
+    install_required['requests'],
     include_package_data=True,
     license='MIT',
     classifiers=[

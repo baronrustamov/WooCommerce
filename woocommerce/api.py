@@ -127,11 +127,11 @@ class Api(object):
                 yield response
             page += 1
        
-    def iter_products():
+    def iter_products(self):
          page = 1
          while True:
              params = {'page': page}
-             products = api._request('get', 'products', params)
+             products = self._request('get', 'products', params)
              for product in products:
                  yield product
              page += 1

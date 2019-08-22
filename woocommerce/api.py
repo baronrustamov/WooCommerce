@@ -127,6 +127,14 @@ class Api(object):
                 yield response
             page += 1
        
+    def iter_products():
+         page = 1
+         while True:
+             params = {'page': page}
+             products = api._request('get', 'products', params)
+             for product in products:
+                 yield product
+             page += 1
 
     def __repr__(self):
         return f'<WooCommerce Api(auth={"YES" if self.logged_in else "NO"}, _endpoint: {self._endpoint}, _method: {self._method.upper()} )>'

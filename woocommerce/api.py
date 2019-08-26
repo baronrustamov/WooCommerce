@@ -117,13 +117,12 @@ class Api(object):
     def get_all(self, endpoint, data=None):
         page = 1
         while True:
-            params = {'page': page, 'per_page': 1}
-            response = self._request(method='get', endpoint=endpoint, params=params,data=data)
-            if not response:
+            params = {'page': page}
+            responses = self._request(method='get', endpoint=endpoint, params=params,data=data)
+            if not responses:
                 break
-            try:
-                yield response[0]
-            except KeyError:
+           
+            for response in responses:
                 yield response
             page += 1
        

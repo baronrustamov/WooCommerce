@@ -129,8 +129,10 @@ class Api(object):
     def iter_products(self):
          page = 1
          while True:
-             params = {'page': page}
+             params = {'page': page, 'per_page': 10}
              products = self._request('get', 'products', params)
+             if not products:
+                    break
              for product in products:
                  yield product
              page += 1

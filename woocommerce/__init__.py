@@ -74,6 +74,14 @@ class Api(object):
         self._session.headers.update(self._headers)
         self._session.params.update(self._params)
 
+    @property
+    def authenticated(self):
+        r = self._session.get(self._api_url + self._set_endpoint('products'))
+        if r.status_code != 200:
+            return False
+        return True
+
+
     def _set_endpoint(self, endpoint):
         return endpoint[1:] if endpoint[0] == '/' else endpoint
 

@@ -76,7 +76,7 @@ class Api(object):
 
     @property
     def authenticated(self):
-        r = self._session.get(self._api_url + self._set_endpoint('products'))
+        r = self._session.get(self._api_url + f'{self._set_endpoint("products")}')
         if r.status_code != 200:
             return False
         return True

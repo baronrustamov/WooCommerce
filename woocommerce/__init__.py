@@ -94,7 +94,7 @@ class Api(object):
         return r
 
     def post(self, endpoint, json_data):
-        r = self._last_response = self._session.post(self._api_url + f'/{self._set_endpoint(endpoint)}', json_data)
+        r = self._last_response = self._session.post(self._api_url + f'/{self._set_endpoint(endpoint)}', json=json_data)
         r = r.json()
         if isinstance(r, list):
             return [Object(x) for x in r]
@@ -102,7 +102,7 @@ class Api(object):
 
 
     def put(self, endpoint, json_data):
-        r = self._last_response = self._session.put(self._api_url + f'/{self._set_endpoint(endpoint)}', json_data)
+        r = self._last_response = self._session.put(self._api_url + f'/{self._set_endpoint(endpoint)}', json=json_data)
         r = r.json()
         if isinstance(r, list):
             return [Object(x) for x in r]

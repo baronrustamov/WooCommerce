@@ -87,7 +87,7 @@ class Api(object):
 
     def get(self, endpoint, limit=25):
         params = f'?per_page={limit}'
-        endpoint = _set_endpoint(endpoint)
+        endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.get(self._api_url + f'/{endpoint + params}')
         r = r.json()
         if isinstance(r, list):
@@ -95,7 +95,7 @@ class Api(object):
         return Object(r)
 
     def post(self, endpoint, json_data):
-        endpoint = _set_endpoint(endpoint)
+        endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.post(self._api_url + f'/{endpoint}', json=json_data)
         r = r.json()
         if isinstance(r, list):
@@ -104,7 +104,7 @@ class Api(object):
 
 
     def put(self, endpoint, json_data):
-        endpoint = _set_endpoint(endpoint)
+        endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.put(self._api_url + f'/{endpoint}', json=json_data)
         r = r.json()
         if isinstance(r, list):
@@ -112,7 +112,7 @@ class Api(object):
         return Object(r)
 
     def delete(self, endpoint):
-        endpoint = _set_endpoint(endpoint)
+        endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.delete(self._api_url + f'/{endpoint}')
         r = r.json()
         if isinstance(r, list):

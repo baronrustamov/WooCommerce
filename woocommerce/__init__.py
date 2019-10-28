@@ -91,16 +91,16 @@ class Api(object):
         r = self._last_response = self._session.get(self._api_url + f'/{endpoint + params}')
         r = r.json()
         if isinstance(r, list):
-            return [Object(x) for x in r]
-        return Object(r)
+            return [Object(x,self) for x in r]
+        return Object(r, self)
 
     def post(self, endpoint, json_data):
         endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.post(self._api_url + f'/{endpoint}', json=json_data)
         r = r.json()
         if isinstance(r, list):
-            return [Object(x) for x in r]
-        return Object(r)
+            return [Object(x, self) for x in r]
+        return Object(r, self)
 
 
     def put(self, endpoint, json_data):
@@ -108,16 +108,16 @@ class Api(object):
         r = self._last_response = self._session.put(self._api_url + f'/{endpoint}', json=json_data)
         r = r.json()
         if isinstance(r, list):
-            return [Object(x) for x in r]
-        return Object(r)
+            return [Object(x, self) for x in r]
+        return Object(r, self)
 
     def delete(self, endpoint):
         endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.delete(self._api_url + f'/{endpoint}')
         r = r.json()
         if isinstance(r, list):
-            return [Object(x) for x in r]
-        return Object(r)
+            return [Object(x, self) for x in r]
+        return Object(r, self)
 
     def generate(self, endpoint):
         page = 1
@@ -128,17 +128,19 @@ class Api(object):
             if not products:
                 break
             for product in products:
-                yield Object(product)
+                yield Object(product, self)
             page += 1
 
 
 class Object:
 
-    def __init__(self, data):
+    def __init__(self, data, conn=None):
         self._d = {}
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
-
+        self.conn = conn
+        
+       
     def _wrap(self, value):
         if isinstance(value, (tuple, list, set, frozenset)):
             return type(value)([self._wrap(v) for v in value])

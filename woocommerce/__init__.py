@@ -86,9 +86,9 @@ class Api(object):
         return endpoint[1:] if endpoint[0] == '/' else endpoint
 
     def get(self, endpoint, limit=25):
-        params = f'?per_page={limit}'
+        params = {'per_page': limit }
         endpoint = self._set_endpoint(endpoint)
-        r = self._last_response = self._session.get(self._api_url + f'/{endpoint + params}')
+        r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)
         r = r.json()
         if isinstance(r, list):
             return [Object(x,self) for x in r]
@@ -122,8 +122,9 @@ class Api(object):
     def generate(self, endpoint):
         page = 1
         while True:
-            params = f'?per_page=10&page={page}'
-            r = self._last_response = self._session.get(self._api_url + f'/{self._set_endpoint(endpoint) + params}')
+#             params = f'?per_page=10&page={page}'
+            params = {'per_page': 10, 'page': page }
+            r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)
             products = r.json()
             if not products:
                 break

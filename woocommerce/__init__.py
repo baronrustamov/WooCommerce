@@ -122,9 +122,9 @@ class Api(object):
     def generate(self, endpoint):
         page = 1
         while True:
-#             params = f'?per_page=10&page={page}'
-            params = {'per_page': 10, 'page': page }
-            r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)
+            params = f'?per_page=10&page={page}'
+#             params = {'per_page': 10, 'page': page }
+            r = self._last_response = self._session.get(self._api_url + f'/{endpoint}/{params}')
             products = r.json()
             if not products:
                 break

@@ -118,7 +118,12 @@ class Api(object):
         if isinstance(r, list):
             return [Object(x, self) for x in r]
         return Object(r, self)
-
+    
+    def delete_bulk(endpoint, ids):
+        req = { 'delete' :  [ {'id': _id} for _id in list(ids) ] }
+        return self.post(endpoint, req)
+                              
+                              
     def generate(self, endpoint):
         page = 1
         while True:

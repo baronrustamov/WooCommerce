@@ -119,7 +119,7 @@ class Api(object):
             return [Object(x, self) for x in r]
         return Object(r, self)
     
-    def delete_bulk(endpoint, ids):
+    def delete_bulk(self, endpoint, ids):
         req = { 'delete' :  [ {'id': _id} for _id in list(ids) ] }
         return self.post(endpoint, req)
                               

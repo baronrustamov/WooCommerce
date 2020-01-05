@@ -118,12 +118,12 @@ class Api(object):
         if isinstance(r, list):
             return [Object(x, self) for x in r]
         return Object(r, self)
-    
+
     def delete_bulk(self, endpoint, ids):
         req = { 'delete' :  [ {'id': _id} for _id in list(ids) ] }
         return self.post(endpoint + '/batch', req)
-                              
-                              
+
+
     def generate(self, endpoint):
         page = 1
         while True:
@@ -145,8 +145,8 @@ class Object:
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
         self.conn = conn
-        
-       
+
+
     def _wrap(self, value):
         if isinstance(value, (tuple, list, set, frozenset)):
             return type(value)([self._wrap(v) for v in value])
@@ -184,18 +184,19 @@ class Object:
                 element = Object._my_dict(val)
             result[key] = element
         return result
-                              
+
      def update_remote(self):
          try:
              answ = self.conn.put(f'products/batch', [ { 'update' : [ self.toDict() ] } ]
          except Exception as e:
              print(e)
              return self._last_response.json()
-         if for key in answ.keys():
+
+         for key in answ.keys():
              if key in ('update', 'create', 'delete'):
-                 res = answ.get(key)
-                 if res:
-                     return res
-             return False
+                res = answ.get(key)
+                if res:
+                    return res
+                # return False
          else:
-             return answ. 
+             return answ

@@ -188,7 +188,9 @@ class Object:
 
     def update_remote(self):
         try:
-            answ = self.conn.put(f'products/batch', [ { 'update' : [ self.toDict() ] } ]
+                              
+            answ = self.conn.put(f'products/batch', { 'update' : [ self.toDict() ] }  )
+
         except Exception as e:
             print(e)
             return self._last_response.json()

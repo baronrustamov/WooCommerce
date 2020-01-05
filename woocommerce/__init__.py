@@ -185,19 +185,20 @@ class Object:
             result[key] = element
         return result
 
-                              
+
     def update_remote(self):
         try:
             answ = self.conn.put(f'products/batch', [ { 'update' : [ self.toDict() ] } ]
         except Exception as e:
             print(e)
             return self._last_response.json()
-
-        for key in answ.keys():
-            if key in ('update', 'create', 'delete'):
-               res = answ.get(key)
-               if res:
-                   return res
-               # return False
-        else:
-            return answ
+        return answ.toDict()
+        
+        # for key in answ.keys():
+        #     if key in ('update', 'create', 'delete'):
+        #        res = answ.get(key)
+        #        if res:
+        #            return res
+        #        # return False
+        # else:
+        #     return ans

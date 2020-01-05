@@ -2,7 +2,7 @@ import setuptools
 
 
 __title__ = "woocommerce"
-__version__ = "1.0"
+__version__ = "1.1"
 __author__ = "UltrafunkAmsterdam"
 __license__ = "MIT"
 

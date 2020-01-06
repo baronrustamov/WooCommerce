@@ -163,6 +163,8 @@ class Object:
     def __init__(self, data, connection=None, endpoint=None):
         self._d = {}
         self._conn = connection
+        if  '/' in endpoint:
+            endpoint = '/'.join(endpoint.split('/')[:-1])
         self._endpoint = endpoint
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
@@ -218,9 +220,6 @@ class Object:
         return result
 
     def refresh(self):
-        endpoint = self._endpoint
-        if  '/' in endpoint:
-            endpoint = '/'.join(endpoint.split('/')[:-1])
         newself = self.connection.get(f'{endpoint}/{self.id}')
         self._updatefrom(newself) 
     

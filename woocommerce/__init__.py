@@ -92,16 +92,22 @@ class Api(object):
     def get(self, endpoint, limit=25):
         params = {'per_page': limit }
         endpoint = self._set_endpoint(endpoint)
-        r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)
-        r = r.json()
+        try:                      
+            r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)
+            r = r.json()
+        except Exception as e:
+            raise InvalidApiResponse(e) from e
         if isinstance(r, list):
             return [Object(x,self, endpoint) for x in r]
         return Object(r, self, endpoint)
 
     def post(self, endpoint, json_data):
         endpoint = self._set_endpoint(endpoint)
-        r = self._last_response = self._session.post(self._api_url + f'/{endpoint}', json=json_data)
-        r = r.json()
+        try:
+            r = self._last_response = self._session.post(self._api_url + f'/{endpoint}', json=json_data)
+            r = r.json()
+        except Exception as e:
+            raise InvalidApiResponse(e) from e
         if isinstance(r, list):
             return [Object(x, self, endpoint) for x in r]
         return Object(r, self, endpoint)
@@ -109,24 +115,33 @@ class Api(object):
 
     def put(self, endpoint, json_data):
         endpoint = self._set_endpoint(endpoint)
-        r = self._last_response = self._session.put(self._api_url + f'/{endpoint}', json=json_data)
-        r = r.json()
+        try:
+            r = self._last_response = self._session.put(self._api_url + f'/{endpoint}', json=json_data)
+            r = r.json()
+        except Exception as e:
+            raise InvalidApiResponse(e) from e
         if isinstance(r, list):
             return [Object(x, self, endpoint) for x in r]
         return Object(r, self)
 
     def delete(self, endpoint):
         endpoint = self._set_endpoint(endpoint)
-        r = self._last_response = self._session.delete(self._api_url + f'/{endpoint}')
-        r = r.json()
+        try:
+            r = self._last_response = self._session.delete(self._api_url + f'/{endpoint}')
+            r = r.json()
+        except Exception as e:
+            raise InvalidApiResponse(e) from e
         if isinstance(r, list):
             return [Object(x, self, endpoint) for x in r]
         return Object(r, self, endpoint)
 
     def delete_bulk(self, endpoint, ids):
+                              
         req = { 'delete' :  [ {'id': _id} for _id in list(ids) ] }
-        return self.post(endpoint + '/batch', req)
-
+        try:
+            return self.post(endpoint + '/batch', req)
+        except Exception as e:
+            raise InvalidApiResponse(e) from e
 
     def generate(self, endpoint):
         page = 1

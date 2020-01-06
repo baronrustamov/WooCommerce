@@ -191,6 +191,8 @@ class Object:
                 continue
             if callable(val):
                 continue
+            if key in ('related_ids',):
+                continue
             element = []
             if isinstance(val, list):
                 for item in val:

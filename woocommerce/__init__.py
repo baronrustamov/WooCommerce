@@ -202,7 +202,9 @@ class Object:
             result[key] = element
         return result
 
-    def refrest(self):
+    def refresh(self):
+        if  '/' in endpoint:
+            endpoint = '/'.join(endpoint.split('/')[:-1])
         newself = self.connection.get(f'{self._endpoint}/{self.id}')
         self._updatefrom(newself) 
     

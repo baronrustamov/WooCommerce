@@ -245,6 +245,7 @@ class Object:
             answ = self._conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
             objects = getattr(answ, action)
             if objects[0].id == self.id:
+                self.refresh()
                 return True
         except Exception as e:
             raise InvalidApiResponse(e) from e

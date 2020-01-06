@@ -147,10 +147,11 @@ class Object:
 
     def __init__(self, data, _conn=None, _endpoint=None):
         self._d = {}
-        for name, value in data.items():
-            setattr(self, name, self._wrap(value))
         self._conn = conn
         self._endpoint = endpoint
+        for name, value in data.items():
+            setattr(self, name, self._wrap(value))
+        
     
     @property
     def endpoint(self):

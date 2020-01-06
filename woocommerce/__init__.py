@@ -203,9 +203,10 @@ class Object:
         return result
 
     def refresh(self):
+        endpoint = self._endpoint
         if  '/' in endpoint:
             endpoint = '/'.join(endpoint.split('/')[:-1])
-        newself = self.connection.get(f'{self._endpoint}/{self.id}')
+        newself = self.connection.get(f'{endpoint}/{self.id}')
         self._updatefrom(newself) 
     
     def _updatefrom(self, otherobject=None):

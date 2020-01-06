@@ -207,8 +207,10 @@ class Object:
     def _updatefrom(self, otherobject=None):
         if isinstance(otherobject, (type(self),)):
             otherobject = otherobject.toDict()
+        me = self.toDict()
         for name, value in otherobject.items():
-            if getattr(self, name) != value:
+            if me.get(name) != value:
+            #if getattr(self, name) != value:
                 print('updating ', str(name), ' with new value ' , str(value))
                 setattr(self, name, self._wrap(value))
         

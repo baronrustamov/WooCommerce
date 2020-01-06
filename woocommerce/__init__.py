@@ -225,7 +225,7 @@ class Object:
         """
         answ = None
         try:                
-            answ = self.conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
+            answ = self._conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
         except Exception as e:
             raise InvalidApiResponse(e) from e
         return answ

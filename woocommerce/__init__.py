@@ -145,7 +145,7 @@ class Api(object):
 
 class Object:
 
-    def __init__(self, data, conn=None, endpoint=None):
+    def __init__(self, data, _conn=None, _endpoint=None):
         self._d = {}
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
@@ -158,7 +158,7 @@ class Object:
  
     @property
     def connection(self):
-        return self._connection
+        return self._conn
     
     def _wrap(self, value):
         if isinstance(value, (tuple, list, set, frozenset)):

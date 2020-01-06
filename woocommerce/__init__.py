@@ -220,7 +220,7 @@ class Object:
         return result
 
     def refresh(self):
-        newself = self.connection.get(f'{endpoint}/{self.id}')
+        newself = self.connection.get(f'{self._endpoint}/{self.id}')
         self._updatefrom(newself) 
     
     def _updatefrom(self, otherobject=None):
@@ -243,11 +243,13 @@ class Object:
         answ = None
         try:                
             answ = self._conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
+            objects = getattr(answ, action)
+            if objects[0].id == self.id:
+                return True
         except Exception as e:
             raise InvalidApiResponse(e) from e
         if hasattr(answ, 'code'):
             raise InvalidApiResponse(answ.code)
-        return getattr(answ, action)
         
         # for key in answ.keys():
         #     if key in ('update', 'create', 'delete'):

@@ -147,7 +147,7 @@ class Object:
 
     def __init__(self, data, connection=None, endpoint=None):
         self._d = {}
-        self._conn = conn
+        self._conn = connection
         self._endpoint = endpoint
         for name, value in data.items():
             setattr(self, name, self._wrap(value))

@@ -151,7 +151,6 @@ class Object:
         self._endpoint = endpoint
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
-        
     
     @property
     def endpoint(self):
@@ -207,7 +206,7 @@ class Object:
     
     def _updatefrom(self, otherobject=None):
         if isinstance(otherobject, (type(self),)):
-            otherobject = otherobject.__dict__
+            otherobject = otherobject.toDict()
         for name, value in otherobject.items():
             if getattr(self, name) != value:
                 print('updating ', str(name), ' with new value ' , str(value))

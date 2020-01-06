@@ -231,7 +231,9 @@ class Object:
             answ = self._conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
         except Exception as e:
             raise InvalidApiResponse(e) from e
-        return answ
+        if hasattr(answ, 'code'):
+            raise InvalidApiResponse(answ.code)
+        return getattr(answ, action)
         
         # for key in answ.keys():
         #     if key in ('update', 'create', 'delete'):

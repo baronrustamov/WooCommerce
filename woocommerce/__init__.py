@@ -202,7 +202,7 @@ class Object:
         return result
 
     def refrest(self):
-        newself = self.connection.get(f'{self._endpoint}/self.id')
+        newself = self.connection.get(f'{self._endpoint}/{self.id}')
         self._updatefrom(newself) 
     
     def _updatefrom(self, otherobject=None):

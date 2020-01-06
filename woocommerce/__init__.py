@@ -229,8 +229,10 @@ class Object:
         me = self.toDict()
         for name, value in otherobject.items():
             if me.get(name) != value:
+                self._conn._log.debug(f'setting own {name} to match remote version:  own:{me.get(name)} / remote:{value} ')
+                  
             #if getattr(self, name) != value:
-                print('updating ', str(name), ' with new value ' , str(value))
+#                 self._conn._log.info('updating ', str(name), ' with new value ' , str(value))
                 setattr(self, name, self._wrap(value))
         
     def commit(self, action='update'):

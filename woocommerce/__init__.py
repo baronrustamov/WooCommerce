@@ -145,7 +145,7 @@ class Api(object):
 
 class Object:
 
-    def __init__(self, data, _conn=None, _endpoint=None):
+    def __init__(self, data, connection=None, endpoint=None):
         self._d = {}
         self._conn = conn
         self._endpoint = endpoint

@@ -24,6 +24,10 @@ from urllib.parse import urlparse
 import json
 
 
+
+class InvalidApiResponse(Exception): pass
+
+
 class Api(object):
 
     def __init__(self, site_url, consumer_key=None, consumer_secret=None, api='wp-json', version='wc/v3', debug=False):
@@ -91,16 +95,16 @@ class Api(object):
         r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)
         r = r.json()
         if isinstance(r, list):
-            return [Object(x,self) for x in r]
-        return Object(r, self)
+            return [Object(x,self, endpoint) for x in r]
+        return Object(r, self, endpoint)
 
     def post(self, endpoint, json_data):
         endpoint = self._set_endpoint(endpoint)
         r = self._last_response = self._session.post(self._api_url + f'/{endpoint}', json=json_data)
         r = r.json()
         if isinstance(r, list):
-            return [Object(x, self) for x in r]
-        return Object(r, self)
+            return [Object(x, self, endpoint) for x in r]
+        return Object(r, self, endpoint)
 
 
     def put(self, endpoint, json_data):
@@ -108,7 +112,7 @@ class Api(object):
         r = self._last_response = self._session.put(self._api_url + f'/{endpoint}', json=json_data)
         r = r.json()
         if isinstance(r, list):
-            return [Object(x, self) for x in r]
+            return [Object(x, self, endpoint) for x in r]
         return Object(r, self)
 
     def delete(self, endpoint):
@@ -116,8 +120,8 @@ class Api(object):
         r = self._last_response = self._session.delete(self._api_url + f'/{endpoint}')
         r = r.json()
         if isinstance(r, list):
-            return [Object(x, self) for x in r]
-        return Object(r, self)
+            return [Object(x, self, endpoint) for x in r]
+        return Object(r, self, endpoint)
 
     def delete_bulk(self, endpoint, ids):
         req = { 'delete' :  [ {'id': _id} for _id in list(ids) ] }
@@ -127,6 +131,7 @@ class Api(object):
     def generate(self, endpoint):
         page = 1
         while True:
+            endpoint = self._set_endpoint(endpoint)
             params = f'?per_page=10&page={page}'
 #             params = {'per_page': 10, 'page': page }
             r = self._last_response = self._session.get(self._api_url + f'/{endpoint}/{params}')
@@ -134,24 +139,32 @@ class Api(object):
             if not products:
                 break
             for product in products:
-                yield Object(product, self)
+                yield Object(product, self, endpoint)
             page += 1
 
 
 class Object:
 
-    def __init__(self, data, conn=None):
+    def __init__(self, data, conn=None, endpoint=None):
         self._d = {}
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
-        self.conn = conn
-
-
+        self._conn = conn
+        self._endpoint = endpoint
+    
+    @property
+    def endpoint(self):
+        return self._endpoint
+ 
+    @property
+    def connection(self):
+        return self._connection
+    
     def _wrap(self, value):
         if isinstance(value, (tuple, list, set, frozenset)):
             return type(value)([self._wrap(v) for v in value])
         else:
-            return self.__class__(value) if isinstance(value, dict) else value
+            return self.__class__(value, self._conn, self._endpoint) if isinstance(value, dict) else value
 
     def toDict(self):
         return self._my_dict(self)
@@ -176,6 +189,8 @@ class Object:
         for key, val in obj.__dict__.items():
             if key.startswith("_"):
                 continue
+            if callable(val):
+                continue
             element = []
             if isinstance(val, list):
                 for item in val:
@@ -185,16 +200,20 @@ class Object:
             result[key] = element
         return result
 
-
-    def update_remote(self):
-        try:
-                              
-            answ = self.conn.put(f'products/batch', { 'update' : [ self.toDict() ] }  )
-
+    
+    def commit(self, action='update'):
+        """
+        action = 'update' (default) -> commit this object to the remote woocommerce instance it came from. 
+        If this object is created as new without coming from a woocommerce instance, and should be created
+        on the remote site, the action should read 'create'
+        if the object needs to be deleted on the remote site, the action should read 'delete'
+        """
+        answ = None
+        try:                
+            answ = self.conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
         except Exception as e:
-            print(e)
-            return self._last_response.json()
-        return answ.toDict()
+            raise InvalidApiResponse(e) from e
+        return answ
         
         # for key in answ.keys():
         #     if key in ('update', 'create', 'delete'):

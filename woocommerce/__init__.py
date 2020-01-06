@@ -231,7 +231,7 @@ class Object:
             self._conn._log.debug(f'comparing own {name} with remote {name}')
             if me.get(name) != value:
                 self._conn._log.debug(f'UPDATING {name}')
-                self._conn._log.debug(f'OWN {name}: {me.get("name")}')
+                self._conn._log.debug(f'OWN {name}: {me.get(name)}')
                 self._conn._log.debug(f'OTHER {name}: {value}')
                 #self._conn._log.debug(f'setting own {name} to match remote version:  own:{me.get(name)} / remote:{value} ')
                   

@@ -201,7 +201,18 @@ class Object:
             result[key] = element
         return result
 
+    def refrest(self):
+        newself = self.conn.get(f'{self._endpoint}/self.id')
+        self._updatefrom(newself) 
     
+    def _updatefrom(self, otherobject=None):
+        if isinstance(otherobject, (type(self),)):
+            otherobject = otherobject.__dict__
+        for name, value in otherobject.items():
+            if getattr(self, name) != value:
+                print('updating ', str(name), ' with new value ' , str(value))
+                setattr(self, name, self._wrap(value))
+        
     def commit(self, action='update'):
         """
         action = 'update' (default) -> commit this object to the remote woocommerce instance it came from. 

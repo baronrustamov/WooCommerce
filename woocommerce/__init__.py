@@ -166,8 +166,8 @@ class Object:
     def __init__(self, data, connection=None, endpoint=None):
         self._d = {}
         self._conn = connection
-        if  '/' in endpoint:
-            endpoint = '/'.join(endpoint.split('/')[:-1])
+        #if  '/' in endpoint:
+        #    endpoint = '/'.join(endpoint.split('/')[:-1])
         self._endpoint = endpoint
         for name, value in data.items():
             setattr(self, name, self._wrap(value))
@@ -223,7 +223,9 @@ class Object:
         return result
 
     def refresh(self):
-        newself = self.connection.get(f'{self._endpoint}/{self.id}')
+        if str(self.id) not in self._endpoint:
+            self._endpoint += f'/{str(self.id)}'
+        newself = self.connection.get(f'{self._endpoint}')
         self._updatefrom(newself) 
     
     def _updatefrom(self, otherobject=None):
@@ -250,8 +252,12 @@ class Object:
         if the object needs to be deleted on the remote site, the action should read 'delete'
         """
         answ = None
+        if str(self.id) in self._endpoint:
+            endpoint = ''.join(self._endpoint.rsplit('/')[0])
+        else:
+            endpoint = self._endpoint
         try:                
-            answ = self._conn.post(f'{self._endpoint}/batch', { action : [ self.toDict() ] }  )    
+            answ = self._conn.post(f'{endpoint}/batch', { action : [ self.toDict() ] }  )    
             objects = getattr(answ, action)
             if objects[0].id == self.id:
                 self.refresh()

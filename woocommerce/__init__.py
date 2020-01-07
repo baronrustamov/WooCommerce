@@ -90,7 +90,7 @@ class Api(object):
         return endpoint[1:] if endpoint[0] == '/' else endpoint
 
     def get(self, endpoint, limit=25, page=0):
-        qs = parse_qs(urlparse(self._api_url + f'{endpoint}'))
+        qs = parse_qs(urlparse(self._api_url + f'{endpoint}').query)
         per_page = qs.get('per_page') or limit
         pagenum = qs.get('page') or page
         params = {'per_page': per_page , 'page': pagenum}

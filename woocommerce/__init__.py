@@ -20,7 +20,7 @@ __all__ = ['Api', 'Object']
 
 import logging
 import requests
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 import json
 
 
@@ -89,8 +89,11 @@ class Api(object):
     def _set_endpoint(self, endpoint):
         return endpoint[1:] if endpoint[0] == '/' else endpoint
 
-    def get(self, endpoint, limit=25):
-        params = {'per_page': limit }
+    def get(self, endpoint, limit=25, page=0):
+        qs = parse_qs(urlparse(self._api_url + f'{endpoint}'))
+        per_page = qs.get('per_page') or limit
+        pagenum = qs.get('page') or page
+        params = {'per_page': per_page , 'page': pagenum}
         endpoint = self._set_endpoint(endpoint)
         try:                      
             r = self._last_response = self._session.get(self._api_url + f'/{endpoint}', params=params)

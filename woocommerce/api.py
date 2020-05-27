@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
-
-__title__ = "woocommerce"
-__version__ = "1.0"
-__author__ = "UltrafunkAmsterdam"
-__license__ = "MIT"
-__all__ = ['Api']
-
+from . import (
+    __title__ , 
+    __version__ , 
+    __author__ , 
+    __license__ 
+)
 import logging
 from urllib.parse import urlparse
-
 import requests
+
+
+__all__ = ['Api']
 
 
 class Api(object):
@@ -126,14 +127,14 @@ class Api(object):
                 yield response
             page += 1
        
-    def iter_products(self):
+    def iter(self, endpoint):
          page = 1
          while True:
              params = {'page': page, 'per_page': 10}
-             products = self._request('get', 'products', params)
-             if not products:
-                    break
-             for product in products:
+             items = self._request('get', endpoint, params)
+             if not items:
+                 break
+             for item in items:
                  yield product
              page += 1
 

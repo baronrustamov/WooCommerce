@@ -13,13 +13,13 @@ __all__ = ["Api"]
 
 class Api(object):
     def __init__(
-            self,
-            site_url,
-            consumer_key=None,
-            consumer_secret=None,
-            api="wp-json",
-            version="wc/v3",
-            debug=False,
+        self,
+        site_url,
+        consumer_key=None,
+        consumer_secret=None,
+        api="wp-json",
+        version="wc/v3",
+        debug=False,
     ):
         """
         Constructs an Api instance
@@ -145,9 +145,6 @@ class Api(object):
         return self.__repr__()
 
 
-
-
-
 def rdict(obj, api):
     retv = RDict(obj)
     retv.api = api
@@ -224,6 +221,8 @@ class RDict(dict):
         :param kw:
         """
         super().__init__(*a, **kw)
+        for k, v in self.items():
+            self[k] = self._wrap(v)
         dict.__setattr__(self, "__dict__", self)
 
     def _wrap(self, val):
